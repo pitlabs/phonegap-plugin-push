@@ -23,8 +23,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import me.leolin.shortcutbadger.ShortcutBadger;
-
 public class PushPlugin extends CordovaPlugin implements PushConstants {
 
     public static final String LOG_TAG = "PushPlugin";
@@ -190,18 +188,6 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
                     }
                 }
             });
-        } else if (SET_APPLICATION_ICON_BADGE_NUMBER.equals(action)) {
-            cordova.getThreadPool().execute(new Runnable() {
-                public void run() {
-                    Log.v(LOG_TAG, "setApplicationIconBadgeNumber: data=" + data.toString());
-                    try {
-                        setApplicationIconBadgeNumber(getApplicationContext(), data.getJSONObject(0).getInt(BADGE));
-                    } catch (JSONException e) {
-                        callbackContext.error(e.getMessage());
-                    }
-                    callbackContext.success();
-                }
-            });
         } else if (CLEAR_ALL_NOTIFICATIONS.equals(action)) {
             cordova.getThreadPool().execute(new Runnable() {
                 public void run() {
@@ -251,11 +237,7 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
     }
 
     public static void setApplicationIconBadgeNumber(Context context, int badgeCount) {
-        if (badgeCount > 0) {
-            ShortcutBadger.applyCount(context, badgeCount);
-        } else {
-            ShortcutBadger.removeCount(context);
-        }
+
     }
 
     @Override
