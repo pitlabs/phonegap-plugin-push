@@ -23,6 +23,7 @@
   - [Visibility](#visibility-of-notifications)
   - [Badges](#badges)
   - [Support for Twilio Notify](#support-for-twilio-notify)
+  - [Notification ID](#notification-id)
 - [iOS Behaviour](#ios-behaviour)
   - [Sound](#sound-1)
   - [Background Notifications](#background-notifications-1)
@@ -232,7 +233,8 @@ var push = PushNotification.init({
 });
 ```
 
-Where *icon* is the name of an image in the Android *drawables* folder. Writing a hook to describe how to copy an image to the Android *drawables* folder is out of scope for this README but there is an [excellent tutorial](http://devgirl.org/2013/11/12/three-hooks-your-cordovaphonegap-project-needs/) that you can copy.
+Where *icon* is the name of an `.png` image file in the Android `res/drawable` folder. For example: `platforms/android/res/drawable/phonegap.png`
+Writing a hook to describe how to copy an image to the Android `res/drawable` folder is out of scope for this README but there is an [excellent tutorial](http://devgirl.org/2013/11/12/three-hooks-your-cordovaphonegap-project-needs/) that you can copy.
 
 *iconColor* is one of the supported formats #RRGGBB or #AARRGGBB or one of the following names: 'red', 'blue', 'green', 'black', 'white', 'gray', 'cyan', 'magenta', 'yellow', 'lightgray', 'darkgray', 'grey', 'lightgrey', 'darkgrey', 'aqua', 'fuchsia', 'lime', 'maroon', 'navy', 'olive', 'purple', 'silver', 'teal'. *iconColor* is supported on Android 5.0 and greater.
 
@@ -242,14 +244,14 @@ Please follow the [Android icon design guidelines](https://www.google.com/design
 
 Additionally, each push can include a large icon which is used to personalize each push. The location of the image may one of three types.
 
-The first is the *drawables* folder in your app. This JSON sent from GCM:
+The first is the `res/drawable` folder in your app. This JSON sent from GCM:
 
 ```javascript
 {
     "registration_ids": ["my device id"],
     "data": {
         "title": "Large Icon",
-    	"message": "Loaded from drawables folder",
+    	"message": "Loaded from drawable folder",
     	"image": "twitter"
     }
 }
@@ -265,7 +267,7 @@ var deviceID = "my device id";
 var service = new gcm.Sender(apiKey);
 var message = new gcm.Message();
 message.addData('title', 'Large Icon');
-message.addData('message', 'Loaded from drawables folder.');
+message.addData('message', 'Loaded from drawable folder.');
 message.addData('image', 'twitter');
 service.send(message, { registrationTokens: [ deviceID ] }, function (err, response) {
 	if(err) console.error(err);
@@ -273,7 +275,7 @@ service.send(message, { registrationTokens: [ deviceID ] }, function (err, respo
 });
 ```
 
-Would look for the *twitter* image in the drawables folder and produce the following notification.
+Would look for the *twitter* image in the `res/drawable` folder and produce the following notification.
 
 ![2015-07-24 02 34 41](https://cloud.githubusercontent.com/assets/353180/8866903/2df48028-3190-11e5-8176-fe8b3f7c5aab.png)
 
@@ -308,7 +310,7 @@ service.send(message, { registrationTokens: [ deviceID ] }, function (err, respo
 });
 ```
 
-Would look for the *logo.png* file in the assets/www/img folder. Since your apps www folder gets copied into the Android assets folder it is an excellent spot to store the images without needing to write a hook to copy them to the *drawables* folder. It produces the following notification.
+Would look for the *logo.png* file in the assets/www/img folder. Since your apps www folder gets copied into the Android assets folder it is an excellent spot to store the images without needing to write a hook to copy them to the `res/drawable` folder. It produces the following notification.
 
 ![2015-07-24 02 20 02](https://cloud.githubusercontent.com/assets/353180/8866901/2df19052-3190-11e5-8c16-a355c59209f3.png)
 
@@ -1046,7 +1048,8 @@ Instead move `content-available: true` into the `data` object of the payload and
 These phones have a particular quirk that when the app is force closed that you will no longer be able to receive notifications until the app is restarted. In order for you to receive background notifications:
 
 - On your Huawei device go to Settings > Protected apps > check "My App" where.
-- On your Xiaomi makes sure your phone has the "Auto-start" property enabled for your app.
+- On your Xiaomi make sure your phone has the "Auto-start" property enabled for your app.
+- On your Asus make sure your phone has the "Auto-start" property enabled for your app.
 
 ### Application force closed
 
@@ -1227,6 +1230,12 @@ The JSON received by your app will comply with the standards described in the se
 ```
 
 Note: "sound" and "soundname" are equivalent and are considered to be the same by the plugin.
+
+## Notification ID
+
+When setting the notification ID or `notId` please make sure that you are not exceeding the [MAX_INT](https://developer.android.com/reference/java/lang/Integer.html#MAX_VALUE) value for Android. Using a value larger than MAX_INT will throw an exception which will be caught by the plugin and it will use a default value of `0`.
+
+This means you can't use the JavaScript's `Date.getMilliseconds()` or Java's `System.currentTimeMillis()` as they will give you a value greater than MAX_INT.
 
 # iOS Behaviour
 

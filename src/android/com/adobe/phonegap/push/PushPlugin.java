@@ -27,7 +27,7 @@ import java.util.List;
 
 public class PushPlugin extends CordovaPlugin implements PushConstants {
 
-    public static final String LOG_TAG = "PushPlugin";
+    public static final String LOG_TAG = "Push_Plugin";
 
     private static CallbackContext pushContext;
     private static CordovaWebView gWebView;
