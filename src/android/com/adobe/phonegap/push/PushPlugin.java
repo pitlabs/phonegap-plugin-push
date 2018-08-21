@@ -439,11 +439,6 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
     return settings.getInt(BADGE, 0);
   }
 
-    SharedPreferences.Editor editor = context.getSharedPreferences(BADGE, Context.MODE_PRIVATE).edit();
-    editor.putInt(BADGE, Math.max(badgeCount, 0));
-    editor.apply();
-  }
-
   @Override
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);

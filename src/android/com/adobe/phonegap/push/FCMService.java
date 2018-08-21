@@ -99,10 +99,6 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
 
       extras = normalizeExtras(applicationContext, extras, messageKey, titleKey);
 
-      if (clearBadge) {
-        PushPlugin.setApplicationIconBadgeNumber(getApplicationContext(), 0);
-      }
-
       // if we are in the foreground and forceShow is `false` only send data
       if (!forceShow && PushPlugin.isInForeground()) {
         Log.d(LOG_TAG, "foreground");
@@ -320,10 +316,6 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
     String contentAvailable = extras.getString(CONTENT_AVAILABLE);
     String forceStart = extras.getString(FORCE_START);
     int badgeCount = extractBadgeCount(extras);
-    if (badgeCount >= 0) {
-      Log.d(LOG_TAG, "count =[" + badgeCount + "]");
-      PushPlugin.setApplicationIconBadgeNumber(context, badgeCount);
-    }
 
     Log.d(LOG_TAG, "message =[" + message + "]");
     Log.d(LOG_TAG, "title =[" + title + "]");
